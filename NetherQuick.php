@@ -9,16 +9,20 @@ class=NetherQuick
 apiversion=9,10
 */
 
-class NetherQuick implements Plugin{
+class NetherQuick implements Plugin {
+
+	public $config;
+
 	private $api;
-	public function __construct(ServerAPI $api, $server = false){
+
+	public function __construct(ServerAPI $api, $server = false) {
 		$this->api = $api;
 	}
 
-	public function init(){
+	public function init() {
 		if(!file_exists('./worlds/Nether/')){
 			$file = @file_get_contents("http://forums.pocketmine.net/index.php?attachments/nether-zip.359/");
-            if($file === false){
+			if($file === false){
 				console('[ERROR][NetherQuick] Failed downloading the world, check your internet connection or download the map manualy');
 				return false;
 			}else{
@@ -33,13 +37,38 @@ class NetherQuick implements Plugin{
 		$this->api->level->loadLevel("Nether");
 		$this->api->addHandler("player.block.touch", array($this, "touchHandler"));
 		$this->config = new Config($this->api->plugin->configPath($this) . "config.yml", CONFIG_YAML, array("ItemID" => "247", "RequireCorrectPattern" => true));
-		$this->netherReactorIds = array(4,4,4,4,4,41,41,41,41,0,0,0,0,4,4,4,4,4,4,4,4,4,0,0,0,0);
-		$this->netherReactorPattern = array(array(0,-1,0),array(1,-1,0),array(-1,-1,0),array(0,-1,1),array(0,-1,-1),array(1,-1,1),array(1,-1,-1),array(-1,-1,1),array(-1,-1,-1),
-											array(1,0,0),array(-1,0,0),array(0,0,1),array(0,0,-1),array(1,0,1),array(1,0,-1),array(-1,0,1),array(-1,0,-1),
-											array(0,1,0),array(1,1,0),array(-1,1,0),array(0,1,1),array(0,1,-1),array(1,1,1),array(1,1,-1),array(-1,1,1),array(-1,1,-1));
-    }
+		$this->netherReactorIds = array(4, 4, 4, 4, 4, 41, 41, 41, 41, 0, 0, 0, 0, 4, 4, 4, 4, 4, 4, 4, 4, 4, 0, 0, 0, 0);
+		$this->netherReactorPattern = array(
+			array(0, -1, 0),
+			array(1, -1, 0),
+			array(-1, -1, 0),
+			array(0, -1, 1),
+			array(0, -1, -1),
+			array(1, -1, 1),
+			array(1, -1, -1),
+			array(-1, -1, 1),
+			array(-1, -1, -1),
+			array(1, 0, 0),
+			array(-1, 0, 0),
+			array(0, 0, 1),
+			array(0, 0, -1),
+			array(1, 0, 1),
+			array(1, 0, -1),
+			array(-1, 0, 1),
+			array(-1, 0, -1),
+			array(0, 1, 0),
+			array(1, 1, 0),
+			array(-1, 1, 0),
+			array(0, 1, 1),
+			array(0, 1, -1),
+			array(1, 1, 1),
+			array(1, 1, -1),
+			array(-1, 1, 1),
+			array(-1, 1, -1)
+		);
+	}
 
-	public function touchHandler($data){
+	public function touchHandler($data) {
 		if($data["target"]->getID() === $this->config->get("ItemID")){
 			if($this->config->get("RequireCorrectPattern") == true){
 				$x = $data["target"]->x;
@@ -65,7 +94,8 @@ class NetherQuick implements Plugin{
 		}
 	}
 
-	public function __destruct(){}
-}
-?>
+	public function __destruct() {
 
+	}
+
+}
